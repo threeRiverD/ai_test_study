@@ -1,7 +1,7 @@
 package com.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.demo.entity.Result;
 import com.demo.entity.User;
 import com.demo.mapper.UserMapper;
@@ -42,6 +42,9 @@ public class UserController {
         if (id == null || id <=0) {
             throw new RuntimeException("id不合法");
         }
+        if (userMapper.selectById(id) == null){
+            throw new RuntimeException("没有找到id="+id+"的用户");
+        }
         return Result.success(userMapper.selectById(id));
     }
 
@@ -53,20 +56,25 @@ public class UserController {
         return Result.success(userMapper.selectList(new LambdaQueryWrapper<>()));
     }
 
-    @PostMapping("/update")
-    public Result<String> update(@RequestBody User user){
+    /**
+     *
+     * 更新用户信息 PUT /user/{id}
+     */
+    @PutMapping("/{id}")
+    public Result<String> update(@PathVariable Integer id, @RequestBody User user){
+        if (id == null || id <=0){
+            throw new RuntimeException("id 不合法");
+        }
+        user.setId(id);
         if (user.getUsername() == null || user.getUsername().trim().equals("")){
             throw new RuntimeException("用户名不能为空");
         }
         if (user.getAge() < 0 || user.getAge() >120){
-            throw new RuntimeException("用户年龄必须在1~120之间");
+            throw new RuntimeException("用户年龄必须在0~120之间");
         }
-        User updateEntity = new User();
-        updateEntity.setUsername(user.getUsername());
-        updateEntity.setAge(user.getAge());
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getId,user.getId());
-        int rows = userMapper.update(updateEntity,wrapper);
+        int rows = userMapper.update(user,wrapper);
         if (rows == 0){
             throw new RuntimeException("未找到ID="+user.getId()+"的用户,更新失败");
         }
