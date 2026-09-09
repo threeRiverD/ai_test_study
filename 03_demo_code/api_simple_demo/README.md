@@ -330,7 +330,7 @@ src
 │   │   ├── entity          # 实体类（User、Result统一返回体）
 │   │   ├── mapper          # Mapper数据库层
 │   │   ├── service         # 业务逻辑层
-│   │   └── global          # 全局异常处理器
+│   │   └── util            # 全局工具-全局异常处理器
 │   └── resources
 │       └── application.yml # 项目配置文件
 └── test                    # 自动化测试代码（后续添加）
