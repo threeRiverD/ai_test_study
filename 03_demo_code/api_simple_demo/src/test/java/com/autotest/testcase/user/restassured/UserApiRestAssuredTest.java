@@ -1,10 +1,14 @@
 package com.autotest.testcase.user.restassured;
 
 import com.autotest.config.ConfigYamlUtil;
+import com.autotest.data.UserDataProvider;
+import com.autotest.util.RestApiUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.response.Response;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -15,17 +19,16 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class UserApiRestAssuredTest {
     private final String baseUrl = ConfigYamlUtil.getValue("api.baseUrl");
-    private final String contentType = ConfigYamlUtil.getValue("api.contentType");
 
     // 每个用例执行之前执行（对应你熟悉的@BeforeMethod）
     @BeforeMethod
-    void beforeTest(){
+    void beforeTest() {
         System.out.println("===== 开始执行接口用例 =====");
     }
 
     // 每个用例执行之后执行
     @AfterMethod
-    void afterTest(){
+    void afterTest() {
         System.out.println("===== 接口用例执行结束 =====");
     }
 
@@ -37,13 +40,10 @@ public class UserApiRestAssuredTest {
                 "    \"age\": 22\n" +
                 "}";
 
-        given()
-                .contentType("application/json")
-                .body(jsonBody)
-                .when()
-                .post(baseUrl + "/user/add")
+        String url = baseUrl + "/user/add";
+        Response resp = RestApiUtil.postJson(url, jsonBody);
+        resp
                 .then()
-                .statusCode(200)
                 .body("code", equalTo(200))
                 .body("msg", equalTo("操作成功"));
     }
@@ -55,12 +55,9 @@ public class UserApiRestAssuredTest {
                 "    \"username\": \"\",\n" +
                 "    \"age\": 22\n" +
                 "}";
-
-        given()
-                .contentType("application/json")
-                .body(jsonBody)
-                .when()
-                .post(baseUrl + "/user/add")
+        String url = baseUrl + "/user/add";
+        Response resp = RestApiUtil.postJson(url, jsonBody);
+        resp
                 .then()
                 .body("code", equalTo(500))
                 .body("msg", equalTo("用户名不能为空"));
@@ -70,15 +67,14 @@ public class UserApiRestAssuredTest {
     @Test
     void testAddUser_AgeInvalid() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put("username","testage");
-        reqMap.put("age",130);
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put("username", "testage");
+        reqMap.put("age", 130);
+
         String jsonBody = mapper.writeValueAsString(reqMap);
-        given()
-                .contentType("application/json")
-                .body(jsonBody)
-                .when()
-                .post(baseUrl + "/user/add")
+        String url = baseUrl + "/user/add";
+        Response resp = RestApiUtil.postJson(url, jsonBody);
+        resp
                 .then()
                 .body("code", equalTo(500))
                 .body("msg", equalTo("用户年龄必须在0~120之间"));
@@ -87,9 +83,9 @@ public class UserApiRestAssuredTest {
     //4.查询用户：正常查询
     @Test
     void testGetUserSuccess() {
-        given()
-                .when()
-                .get(baseUrl + "/user/2")
+        String url = baseUrl + "/user/2";
+        Response resp = RestApiUtil.get(url);
+        resp
                 .then()
                 .statusCode(200)
                 .body("code", equalTo(200));
@@ -98,9 +94,9 @@ public class UserApiRestAssuredTest {
     //5.查询不存在ID
     @Test
     void testGetUser_NotExist() {
-        given()
-                .when()
-                .get(baseUrl + "/user/9999")
+        String url = baseUrl + "/user/9988";
+        Response resp = RestApiUtil.get(url);
+        resp
                 .then()
                 .body("code", equalTo(500));
     }
@@ -109,15 +105,13 @@ public class UserApiRestAssuredTest {
     @Test
     void testUpdateUserSuccess() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put("username","auto_testupdate");
-        reqMap.put("age",10);
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put("username", "auto_testupdate");
+        reqMap.put("age", 10);
         String jsonBody = mapper.writeValueAsString(reqMap);
-        given()
-                .contentType("application/json")
-                .body(jsonBody)
-                .when()
-                .put(baseUrl + "/user/1")
+        String url = baseUrl + "/user/2";
+        Response resp = RestApiUtil.putJson(url, jsonBody);
+        resp
                 .then()
                 .body("code", equalTo(200));
     }
@@ -126,15 +120,13 @@ public class UserApiRestAssuredTest {
     @Test
     void testUpdateUser_NotExistId() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put("username","test_update_no_id");
-        reqMap.put("age",130);
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put("username", "test_update_no_id");
+        reqMap.put("age", 130);
         String jsonBody = mapper.writeValueAsString(reqMap);
-        given()
-                .contentType("application/json")
-                .body(jsonBody)
-                .when()
-                .put(baseUrl + "/user/9989")
+        String url = baseUrl + "/user/9989";
+        Response resp = RestApiUtil.putJson(url, jsonBody);
+        resp
                 .then()
                 .body("code", equalTo(500));
     }
@@ -142,9 +134,9 @@ public class UserApiRestAssuredTest {
     //8.删除用户DELETE 正向
     @Test
     void testDeleteUserSuccess() {
-        given()
-                .when()
-                .delete(baseUrl + "/user/10")
+        String url = baseUrl + "/user/2";
+        Response resp = RestApiUtil.delete(url);
+        resp
                 .then()
                 .body("code", equalTo(200));
     }
@@ -152,10 +144,27 @@ public class UserApiRestAssuredTest {
     //9.删除不存在ID
     @Test
     void testDeleteUser_NotExistId() {
-        given()
-                .when()
-                .delete(baseUrl + "/user/9999")
+        String url = baseUrl + "/user/2";
+        Response resp = RestApiUtil.delete(url);
+        resp
                 .then()
                 .body("code", equalTo(500));
+    }
+
+    /**
+     * 用户数据驱动测试添加用户
+     */
+    @Test(dataProvider="addUserData",dataProviderClass = UserDataProvider.class)
+    void testAddUserData(String username, Integer age, int expectCode, String expectMsg){
+// 拼接json请求体
+        String reqBody = String.format("{\"username\":\"%s\",\"age\":%d}", username, age);
+        String url = baseUrl + "/user/add";
+
+        Response resp = RestApiUtil.postJson(url, reqBody);
+
+        // 断言
+        resp.then()
+                .body("code", equalTo(expectCode))
+                .body("msg", equalTo(expectMsg));
     }
 }
