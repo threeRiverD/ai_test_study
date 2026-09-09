@@ -22,6 +22,6 @@ public class GlobalExceptionHandle {
      */
     @ExceptionHandler(Exception.class)
     public Result HandleOthers(Exception ep){
-        return Result.fail("系统异常"+ep.getMessage());
+        return Result.fail(ep.getMessage());
     }
 }

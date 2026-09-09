@@ -25,7 +25,7 @@ public class UserController {
             throw new RuntimeException("用户名不能为空");
         }
         if (user.getAge() < 0 || user.getAge() >120){
-            throw new RuntimeException("用户年龄必须在1~120之间");
+            throw new RuntimeException("用户年龄必须在0~120之间");
         }
         int rows = userMapper.insert(user);
         if (rows == 0){

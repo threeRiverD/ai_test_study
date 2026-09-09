@@ -1,0 +1,6 @@
+
+# 自动化测试配置
+api:
+  baseUrl: http://localhost:8080
+  contentType: application/json
+

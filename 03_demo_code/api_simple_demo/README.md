@@ -71,7 +71,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常用户名不能为空",
+    "msg": "用户名不能为空",
     "data": null
 }
 ```
@@ -90,7 +90,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常用户年龄必须在1~120之间",
+    "msg": "用户年龄必须在1~120之间",
     "data": null
 }
 ```
@@ -109,7 +109,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常用户年龄必须在1~120之间",
+    "msg": "用户年龄必须在1~120之间",
     "data": null
 }
 ```
@@ -141,7 +141,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常id不合法",
+    "msg": "id不合法",
     "data": null
 }
 ```
@@ -151,7 +151,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常没有找到id=999的用户",
+    "msg": "没有找到id=999的用户",
     "data": null
 }
 ```
@@ -246,7 +246,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常未找到ID=1111的用户,更新失败",
+    "msg": "未找到ID=1111的用户,更新失败",
     "data": null
 }
 ```
@@ -265,7 +265,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常id 不合法",
+    "msg": "id 不合法",
     "data": null
 }
 ```
@@ -291,7 +291,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常id不合法",
+    "msg": "id不合法",
     "data": null
 }
 ```
@@ -301,7 +301,7 @@ CREATE TABLE `user` (
 ```
 {
     "code": 500,
-    "msg": "系统异常没有找到id=111的用户",
+    "msg": "没有找到id=111的用户",
     "data": null
 }
 ```
