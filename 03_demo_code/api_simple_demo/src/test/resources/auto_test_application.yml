@@ -1,0 +1,11 @@
+
+# 自动化测试配置
+api:
+  baseUrl: http://localhost:8080
+  contentType: application/json
+
+db:
+  url: "jdbc:mysql://127.0.0.1:3306/study_test?useSSL=false&serverTimezone=Asia/Shanghai"
+  username: root
+  password: sun0717
+  driver-class-name: com.mysql.cj.jdbc.Driver
